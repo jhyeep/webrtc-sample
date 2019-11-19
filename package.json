@@ -1,0 +1,27 @@
+{
+  "name": "webrtc-sample",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "faker": "^4.1.0",
+    "gh-pages": "^1.1.0",
+    "react": "^16.3.2",
+    "react-dom": "^16.3.2",
+    "webrtc-adapter": "^6.1.5",
+    "websocket": "^1.0.26",
+    "websocket-node": "^0.1.0"
+  },
+  "devDependencies": {
+    "react-scripts": "1.1.4"
+  },
+  "scripts": {
+    "start-dev": "react-scripts start",
+    "start": "node signaling-server",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
+  },
+  "homepage": "https://jhyeep.github.io/webrtc-sample"
+}
