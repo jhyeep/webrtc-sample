@@ -6,56 +6,32 @@ class PeerConnection {
         onClose,
         localStream,
         username,
-        targetUsername,
-        dataChannelLabel
+        targetUsername
     }) {
         this.signalingConnection = signalingConnection;
         this.onClose = onClose;
         this.localStream = localStream;
         this.username = username;
-        this.targetUsername = targetUsername;
-        this.dataChannelLabel = dataChannelLabel;
+        this.targetUsername = targetUsername
 
         this.peerConnection = new RTCPeerConnection({
-            iceServers: [
-                {
-                    urls: `turn:${window.location.hostname}`,
-                    username: "webrtc",
-                    credential: "turnserver"
-                }
-            ]
+            iceServers: [{
+                urls: `turn:${window.location.hostname}`,
+                username: "webrtc",
+                credential: "turnserver"
+            }]
         });
         this.peerConnection.onicecandidate = this.handleICECandidateEvent;
         this.peerConnection.oniceconnectionstatechange = this.handleICEConnectionStateChangeEvent;
+        // peerConnection.onicegatheringstatechange = this.handleICEGatheringStateChangeEvent;
         this.peerConnection.onsignalingstatechange = this.handleSignalingStateChangeEvent;
-        // this.peerConnection.onnegotiationneeded = this.handleNegotiationNeededEvent;
+        this.peerConnection.onnegotiationneeded = this.handleNegotiationNeededEvent;
         this.peerConnection.onaddtrack = gotRemoteTrack;
         this.peerConnection.onaddstream = gotRemoteStream;
 
-        if (this.localStream) {
-            this.peerConnection.addStream(this.localStream);
-        }
-        if (this.dataChannelLabel) {
-            this.dataChannel = this.peerConnection.createDataChannel(
-                this.dataChannelLabel,
-                {
-                    ordered: true,
-                    maxRetransmitTime: 3000
-                }
-            );
-            this.dataChannel.onerror = error =>
-                console.error("Data channel error", error);
-            this.dataChannel.onmessage = this.onDataChannelMessage;
-            this.dataChannel.onopen = () => {
-                console.log("Data channel open");
-                this.dataChannel.send("Hello world!");
-            };
-            this.dataChannel.onclose = () => console.log("Data channel closed");
-        }
+        this.peerConnection.addStream(this.localStream);
 
-        this.msgUnlisten = this.signalingConnection.addMsgListener(
-            this.onSignalingMessage
-        );
+        this.msgUnlisten = this.signalingConnection.addMsgListener(this.onSignalingMessage);
 
         console.log("peerconnection created", this.peerConnection);
     }
@@ -86,40 +62,32 @@ class PeerConnection {
         }
     };
 
-    offerConnection = () => {
-        const { username, targetUsername } = this;
-
-        console.log("creating offer");
+    handleNegotiationNeededEvent = () => {
+        const {
+            username,
+            targetUsername
+        } = this;
         this.peerConnection
             .createOffer()
-            .then(offer => {
-                console.log("attempting local description", offer);
-                console.log("state", this.peerConnection.signalingState);
-
-                return this.peerConnection.setLocalDescription(offer);
-            })
-            .then(() => {
-                console.log(
-                    "Sending offer to",
-                    targetUsername,
-                    "from",
-                    username
-                );
+            .then(offer => this.peerConnection.setLocalDescription(offer))
+            .then(() =>
                 this.signalingConnection.sendToServer({
                     name: username,
                     target: targetUsername,
-                    type: "connection-offer",
+                    type: "video-offer",
                     sdp: this.peerConnection.localDescription
-                });
-            })
-            .catch(err => {
-                console.log("Error in handleNegotiationNeededEvent");
-                console.error(err);
-            });
+                })
+            )
+            .catch(console.error);
     };
 
-    connectionOffer = ({ sdp }) => {
-        const { username, targetUsername } = this;
+    videoOffer = ({
+        sdp
+    }) => {
+        const {
+            username,
+            targetUsername
+        } = this;
 
         this.peerConnection
             .setRemoteDescription(new RTCSessionDescription(sdp))
@@ -131,58 +99,54 @@ class PeerConnection {
                 this.signalingConnection.sendToServer({
                     name: username,
                     targetUsername: targetUsername,
-                    type: "connection-answer",
+                    type: "video-answer",
                     sdp: this.peerConnection.localDescription
                 });
             })
-            .catch(err => {
-                console.log("Error in connectionOffer");
-                console.error(err);
-            });
-    };
+            .catch(console.error);
+    }
 
-    connectionAnswer = ({ sdp }) => {
+    videoAnswer = ({
+        sdp
+    }) => {
         this.peerConnection
             .setRemoteDescription(new RTCSessionDescription(sdp))
-            .catch(err => {
-                console.log("Error in connectionAnswer");
-                console.error(err);
-            });
-    };
+            .catch(console.error);
+    }
 
-    newICECandidate = ({ candidate }) => {
+    newICECandidate = ({
+        candidate
+    }) => {
         this.peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
-    };
+    }
 
-    onSignalingMessage = msg => {
+    onSignalingMessage = (msg) => {
         switch (msg.type) {
-            case "connection-answer": // Callee has answered our offer
-                console.log(
-                    "Calling connectionAnswer from PeerConnection.onSignalingMessage"
-                );
-                this.connectionAnswer(msg);
+            case "video-answer": // Callee has answered our offer
+                this.videoAnswer(msg);
                 break;
 
             case "new-ice-candidate": // A new ICE candidate has been received
-                this.newICECandidate(msg);
+                this.newICECandidate(msg)
                 break;
 
             case "hang-up": // The other peer has hung up the call
-                this.close();
+                this.close()
                 break;
         }
-    };
-
-    onDataChannelMessage = msg => {
-        console.log("Data channel message received", msg);
-    };
+    }
 
     close = () => {
         this.peerConnection.close();
         this.peerConnection = null;
 
-        this.onClose();
-    };
+        this.onClose()
+    }
+
 }
 
 export default PeerConnection;
+
+
+// WEBPACK FOOTER //
+// ./src/PeerConnection.js

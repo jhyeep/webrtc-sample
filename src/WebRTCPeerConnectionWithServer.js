@@ -9,6 +9,8 @@ class WebRTCPeerConnectionWithServer extends React.Component {
         startDisabled: true,
         callDisabled: true,
         hangUpDisabled: true,
+        pc1: null,
+        pc2: null,
         localStream: null,
         clientID: new Date().getTime() % 1000,
         username: faker.internet.userName(),
@@ -38,7 +40,7 @@ class WebRTCPeerConnectionWithServer extends React.Component {
     componentDidMount() {
         this.signalingConnection = new SignalingConnection({
             // socketURL: "localhost:6503",
-            socketURL: "webrtc-sample.jhyeep.now.sh",
+            socketURL: "webrtc-sample-cedgiiiply.now.sh",
             onOpen: () =>
                 this.setState({
                     startDisabled: false
@@ -235,3 +237,8 @@ class WebRTCPeerConnectionWithServer extends React.Component {
 }
 
 export default WebRTCPeerConnectionWithServer;
+
+
+
+// WEBPACK FOOTER //
+// ./src/WebRTCPeerConnectionWithServer.js
