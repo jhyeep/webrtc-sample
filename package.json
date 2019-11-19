@@ -23,5 +23,5 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
-  "homepage": "https://jhyeep.github.io/webrtc-sample"
+  "homepage": "https://jhyeep.github.io/webrtc-sample/"
 }

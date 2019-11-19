@@ -36,7 +36,7 @@ class WebRTCDataChannel extends React.Component {
     componentDidMount() {
         this.signalingConnection = new SignalingConnection({
             // socketURL: "localhost:6503",
-            socketURL: "webrtc-sample-signaling.now.sh",
+            socketURL: "webrtc-sample.jhyeep.now.sh",
             onOpen: () =>
                 this.setState({
                     startDisabled: false,
