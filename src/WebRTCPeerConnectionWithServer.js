@@ -274,13 +274,6 @@ class WebRTCPeerConnectionWithServer extends React.Component {
         });
     };
 
-    // newStream = () => {
-        
-    // }
-
-    // renderMultiple = () => {
-    //     return 
-    // }
 
     render() {
         const {
@@ -302,96 +295,103 @@ class WebRTCPeerConnectionWithServer extends React.Component {
                     />
                     <button onClick={this.setUsername}> Set Username </button>
                 </div>
-                <video
-                    ref={this.localVideoRef}
-                    autoPlay
-                    muted
-                    style={{
-                        width: "240px",
-                        height: "180px"
-                    }}
-                />
-                <video
-                    ref={this.localVideoRef2}
-                    autoPlay
-                    muted
-                    style={{
-                        width: "240px",
-                        height: "180px"
-                    }}
-                />
-                <video
-                    ref={this.localVideoRef3}
-                    autoPlay
-                    muted
-                    style={{
-                        width: "240px",
-                        height: "180px"
-                    }}
-                />
-                <video
-                    ref={this.localVideoRef4}
-                    autoPlay
-                    muted
-                    style={{
-                        width: "240px",
-                        height: "180px"
-                    }}
-                />
-                <video
-                    ref={this.localVideoRef5}
-                    autoPlay
-                    muted
-                    style={{
-                        width: "240px",
-                        height: "180px"
-                    }}
-                />
-                <video
-                    ref={this.remoteVideoRef}
-                    autoPlay
-                    muted
-                    style={{
-                        width: "240px",
-                        height: "180px"
-                    }}
-                />
-                <video
-                    ref={this.remoteVideoRef2}
-                    autoPlay
-                    muted
-                    style={{
-                        width: "240px",
-                        height: "180px"
-                    }}
-                />
-                <video
-                    ref={this.remoteVideoRef3}
-                    autoPlay
-                    muted
-                    style={{
-                        width: "240px",
-                        height: "180px"
-                    }}
-                />
-                <video
-                    ref={this.remoteVideoRef4}
-                    autoPlay
-                    muted
-                    style={{
-                        width: "240px",
-                        height: "180px"
-                    }}
-                />
-                <video
-                    ref={this.remoteVideoRef5}
-                    autoPlay
-                    muted
-                    style={{
-                        width: "240px",
-                        height: "180px"
-                    }}
-                />
+                Local
+                <div>
+                    <video
+                        ref={this.localVideoRef4}
+                        autoPlay
+                        muted
+                        style={{
+                            width: "240px",
+                            height: "180px"
+                        }}
+                    />
+                    <video
+                        ref={this.localVideoRef2}
+                        autoPlay
+                        muted
+                        style={{
+                            width: "240px",
+                            height: "180px"
+                        }}
+                    />
+                    <video
+                        ref={this.localVideoRef}
+                        autoPlay
+                        muted
+                        style={{
+                            width: "240px",
+                            height: "180px"
+                        }}
+                    />
+                    <video
+                        ref={this.localVideoRef3}
+                        autoPlay
+                        muted
+                        style={{
+                            width: "240px",
+                            height: "180px"
+                        }}
+                    />
+                    <video
+                        ref={this.localVideoRef5}
+                        autoPlay
+                        muted
+                        style={{
+                            width: "240px",
+                            height: "180px"
+                        }}
+                    />
+                </div>
+                Remote
+                <div>
+                    <video
+                        ref={this.remoteVideoRef4}
+                        autoPlay
+                        muted
+                        style={{
+                            width: "240px",
+                            height: "180px"
+                        }}
+                    />
+                    <video
+                        ref={this.remoteVideoRef2}
+                        autoPlay
+                        muted
+                        style={{
+                            width: "240px",
+                            height: "180px"
+                        }}
+                    />
+                    <video
+                        ref={this.remoteVideoRef}
+                        autoPlay
+                        muted
+                        style={{
+                            width: "240px",
+                            height: "180px"
+                        }}
+                    />
+                    <video
+                        ref={this.remoteVideoRef3}
+                        autoPlay
+                        muted
+                        style={{
+                            width: "240px",
+                            height: "180px"
+                        }}
+                    />
+                    <video
+                        ref={this.remoteVideoRef5}
+                        autoPlay
+                        muted
+                        style={{
+                            width: "240px",
+                            height: "180px"
+                        }}
+                    />
+                </div>
+                
                 <div>
                     <button onClick={this.initMedia} disabled={startDisabled}>
                         Init Media
