@@ -5,14 +5,24 @@ class PeerConnection {
         signalingConnection,
         onClose,
         localStream,
+        localStream2,
+        localStream3,
+        localStream4,
+        localStream5,
         username,
-        targetUsername
+        targetUsername,
+        streamNo
     }) {
         this.signalingConnection = signalingConnection;
         this.onClose = onClose;
         this.localStream = localStream;
+        this.localStream2 = localStream2;
+        this.localStream3 = localStream3;
+        this.localStream4 = localStream4;
+        this.localStream5 = localStream5;
         this.username = username;
-        this.targetUsername = targetUsername
+        this.targetUsername = targetUsername;
+        this.streamNo = streamNo;
 
         this.peerConnection = new RTCPeerConnection({
             iceServers: [{
@@ -29,7 +39,24 @@ class PeerConnection {
         this.peerConnection.onaddtrack = gotRemoteTrack;
         this.peerConnection.onaddstream = gotRemoteStream;
 
+        console.log(localStream.getTracks());
         this.peerConnection.addStream(this.localStream);
+        if (this.streamNo >= 2) {
+            console.log(localStream2.getTracks());
+            this.peerConnection.addStream(this.localStream2);
+        }
+        if (this.streamNo >= 3) {
+            console.log(localStream3.getTracks());
+            this.peerConnection.addStream(this.localStream3);
+        }
+        if (this.streamNo >= 4) {
+            console.log(localStream4.getTracks());
+            this.peerConnection.addStream(this.localStream4);
+        }
+        if (this.streamNo >= 5) {
+            console.log(localStream5.getTracks());
+            this.peerConnection.addStream(this.localStream5);
+        }
 
         this.msgUnlisten = this.signalingConnection.addMsgListener(this.onSignalingMessage);
 
