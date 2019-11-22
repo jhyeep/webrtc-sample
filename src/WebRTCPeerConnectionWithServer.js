@@ -19,7 +19,8 @@ class WebRTCPeerConnectionWithServer extends React.Component {
         clientID: new Date().getTime() % 1000,
         username: faker.internet.userName(),
         userList: [],
-        streamNo: null
+        streamNo: null,
+        receivedStreams: null
     };
 
     localVideoRef = React.createRef();
@@ -28,6 +29,11 @@ class WebRTCPeerConnectionWithServer extends React.Component {
     localVideoRef4 = React.createRef();
     localVideoRef5 = React.createRef();
     remoteVideoRef = React.createRef();
+    remoteVideoRef2 = React.createRef();
+    remoteVideoRef3 = React.createRef();
+    remoteVideoRef4 = React.createRef();
+    remoteVideoRef5 = React.createRef();
+
     peerConnection = null;
     signalingConnection = null;
 
@@ -104,7 +110,7 @@ class WebRTCPeerConnectionWithServer extends React.Component {
             });
             console.log('init 1')
             console.log(this.state)
-        } else if (this.state.streamNo == 1){
+        } else if (this.state.streamNo === 1){
             this.localVideoRef2.current.srcObject = stream;
             this.setState({
                 localStream2: stream,
@@ -112,7 +118,7 @@ class WebRTCPeerConnectionWithServer extends React.Component {
             });
             console.log('init 2')
             console.log(this.state)
-        } else if (this.state.streamNo == 2){
+        } else if (this.state.streamNo === 2){
             this.localVideoRef3.current.srcObject = stream;
             this.setState({
                 localStream3: stream,
@@ -120,7 +126,7 @@ class WebRTCPeerConnectionWithServer extends React.Component {
             });
             console.log('init 3')
             console.log(this.state)
-        } else if (this.state.streamNo == 3){
+        } else if (this.state.streamNo === 3){
             this.localVideoRef4.current.srcObject = stream;
             this.setState({
                 localStream4: stream,
@@ -128,7 +134,7 @@ class WebRTCPeerConnectionWithServer extends React.Component {
             });
             console.log('init 4')
             console.log(this.state)
-        } else if (this.state.streamNo == 4){
+        } else if (this.state.streamNo === 4){
             this.localVideoRef5.current.srcObject = stream;
             this.setState({
                 localStream5: stream,
@@ -148,6 +154,8 @@ class WebRTCPeerConnectionWithServer extends React.Component {
     gotRemoteTrack = event => {
         let remoteVideo = this.remoteVideoRef.current;
 
+        console.log('hihi')
+        console.log(event.streams)
         if (remoteVideo.srcObject !== event.streams[0]) {
             remoteVideo.srcObject = event.streams[0];
         }
@@ -157,9 +165,17 @@ class WebRTCPeerConnectionWithServer extends React.Component {
         });
     };
     gotRemoteStream = event => {
-        this.remoteVideoRef.current.srcObject = event.stream;
+        if (this.state.receivedStreams === null) this.remoteVideoRef.current.srcObject = event.stream;
+        if (this.state.receivedStreams === 1) this.remoteVideoRef2.current.srcObject = event.stream;
+        if (this.state.receivedStreams === 2) this.remoteVideoRef3.current.srcObject = event.stream;
+        if (this.state.receivedStreams === 3) this.remoteVideoRef4.current.srcObject = event.stream;
+        if (this.state.receivedStreams === 4) this.remoteVideoRef5.current.srcObject = event.stream;
+
         this.setState({
             hangUpDisabled: false
+        });
+        this.setState({
+            receivedStreams: this.state.receivedStreams + 1
         });
     };
 
@@ -191,6 +207,40 @@ class WebRTCPeerConnectionWithServer extends React.Component {
         });
         this.peerConnection.close();
     };
+
+    logStats = () => {
+        var rtcPeerConn = this.peerConnection.peerConnection;
+        // try {
+            // Chrome
+        rtcPeerConn.getStats(function callback(report) {
+            var rtcStatsReports = report.result();
+            for (var i=0; i<rtcStatsReports.length; i++) {
+                var statNames = rtcStatsReports[i].names();
+                // filter the ICE stats
+                if (statNames.indexOf("transportId") > -1) {
+                    var logs = "";
+                    for (var j=0; j<statNames.length; j++) {
+                        var statName = statNames[j];
+                        var statValue = rtcStatsReports[i].stat(statName);
+                        logs = logs + statName + ": " + statValue + ", ";
+                    }
+                    console.log(logs);
+                }
+            }
+        });
+        // } 
+        // catch (e) {
+        //     // Firefox
+        //     if (remoteVideoStream) {
+        //         var tracks = remoteVideoStream.getTracks();
+        //         for (var h=0; h<tracks.length; h++) {
+        //             rtcPeerConn.getStats(tracks[h], function callback(report) {
+        //                 console.log(report);
+        //             }, function(error) {});
+        //         }
+        //     }
+        // }
+    }
 
     createPeerConnection = () => {
         if (this.peerConnection) return;
@@ -306,6 +356,42 @@ class WebRTCPeerConnectionWithServer extends React.Component {
                         height: "180px"
                     }}
                 />
+                <video
+                    ref={this.remoteVideoRef2}
+                    autoPlay
+                    muted
+                    style={{
+                        width: "240px",
+                        height: "180px"
+                    }}
+                />
+                <video
+                    ref={this.remoteVideoRef3}
+                    autoPlay
+                    muted
+                    style={{
+                        width: "240px",
+                        height: "180px"
+                    }}
+                />
+                <video
+                    ref={this.remoteVideoRef4}
+                    autoPlay
+                    muted
+                    style={{
+                        width: "240px",
+                        height: "180px"
+                    }}
+                />
+                <video
+                    ref={this.remoteVideoRef5}
+                    autoPlay
+                    muted
+                    style={{
+                        width: "240px",
+                        height: "180px"
+                    }}
+                />
                 <div>
                     <button onClick={this.initMedia} disabled={startDisabled}>
                         Init Media
@@ -313,8 +399,8 @@ class WebRTCPeerConnectionWithServer extends React.Component {
                     <button onClick={this.hangUp} disabled={hangUpDisabled}>
                         Hang Up
                     </button>
-                    <button onClick={this.newStream} disabled={hangUpDisabled}>
-                        Hang Up
+                    <button onClick={this.logStats}>
+                        Log Stats
                     </button>
                 </div>
                 <div>
